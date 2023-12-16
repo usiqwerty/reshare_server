@@ -19,9 +19,9 @@ def api_get_solution():
 	return generate_solution(ss_sol)
 
 
-@app.route("/save")
-def save_db():
-	return save()
+@app.route("/")
+def index():
+	return "Is's working"
 
 
 app.run("127.0.0.1", 8000)  # , ssl_context='adhoc'
