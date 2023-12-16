@@ -38,6 +38,22 @@ def save():
 	return f"Saved {len(cache.keys())} entries"
 
 
+def save_to_cache(key, ss_solution):
+	global cache
+	cache[key] = ss_solution
+
+
+def get_from_cache(key):
+	return cache[key]
+
+
+def present_in_cache(key):
+	return key in cache
+def stat_add(ss:int, rs:int):
+	global stat
+	stat["ss-req-count"] += ss
+	stat["rs-req-count"] += rs
+
 def cached_get(args):
 	global cache
 	courseId = args['courseId']  # '7072'
@@ -64,11 +80,12 @@ def cached_get(args):
 		   f"{client=!s}")
 
 	key = f"{quizId}-{questionId}"
-	if key not in cache:
+	if not present_in_cache(key):
 		print(url)
-		stat["ss-req-count"] += 1
+		stat_add(1,0)
 		ss_solution = requests.get(url).json()
-		cache[key] = ss_solution
+		save_to_cache(key, ss_solution)
+
 	else:
-		stat["rs-req-count"] += 1
-	return cache[key]
+		stat_add(0, 1)
+	return get_from_cache(key)
